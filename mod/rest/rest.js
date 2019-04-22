@@ -6,11 +6,7 @@ import CoreUtils from 'core/utils'
 import getConfig from 'core/config_util'
 import { Status } from 'core/status'
 import getJWTToken from 'rest/jwt_token_generator'
-import agentsService from 'rest/agents_service.js'
-import PeersService from 'rest/peers_service.js'
-import domainsService from 'rest/domains_service.js'
-import gatewaysService from 'rest/gateways_service.js'
-import didsService from 'rest/dids_service.js'
+import resourcesService from 'rest/resources_service.js'
 import parameterAuthFilter from 'rest/parameter_auth_filter'
 import basicAuthFilter from 'rest/basic_auth_filter'
 
@@ -35,7 +31,7 @@ export default class Rest {
         this.server = server
         this.config = config
 
-        LOG.info("Starting Restful service (port: " + this.rest.port + ", apiPath: '" + this.system.apiPath + "')")
+        LOG.info('Starting Restful service (port: ' + this.rest.port + ', apiPath: ' + this.system.apiPath + ')')
 
         Spark.ipAddress(this.rest.bindAddr)
 
@@ -48,17 +44,16 @@ export default class Rest {
 
         Spark.port(this.rest.port)
         Spark.internalServerError((req, res) => {
-            res.type("application/json")
-            return "{\"status\": \"500\", \"message\":\"Internal server error\"}";
+            res.type('application/json')
+            return '{\"status\": \"500\", \"message\":\"Internal server error\"}';
         })
         Spark.notFound((req, res) => {
-            res.type("application/json")
-            return "{\"status\": \"404\", \"message\":\"Not found\"}";
+            res.type('application/json')
+            return '{\"status\": \"404\", \"message\":\"Not found\"}';
         })
     }
 
     start() {
-
         options('/*', (req, res) => {
               const accessControlRequestHeaders = req.headers('Access-Control-Request-Headers')
               if (accessControlRequestHeaders != null) {
@@ -73,29 +68,26 @@ export default class Rest {
         })
 
         path(this.system.apiPath, (r) => {
-            before('/*', (req, res) => res.header('Access-Control-Allow-Origin', '*'))
-
-            before('/credentials', (req, res) => basicAuthFilter(req, res, this.dataAPIs.UsersAPI))
-
-            before('/system/status',  (req, res) => parameterAuthFilter(req, res, this.config.salt))
-
-            before('/system/info',  (req, res) => parameterAuthFilter(req, res, this.config.salt))
-
-            before('/location',  (req, res) => parameterAuthFilter(req, res, this.config.salt))
-
-            before('/registry',  (req, res) => parameterAuthFilter(req, res, this.config.salt))
+            before('/*', (req, res) => {
+              res.header('Access-Control-Allow-Origin', '*')
+              if (req.pathInfo().endsWith('/credentials')) {
+                basicAuthFilter(req, res, this.dataAPIs.UsersAPI)
+              } else {
+                parameterAuthFilter(req, res, this.config.salt)
+              }
+            })
 
             // Its always running! Use to ping Sip IO server
-            get('/system/status', (req, res) => "{\"status\": \"Up\"}")
+            get('/system/status', (req, res) => '{\"status\": \"Up\"}')
 
             post('/system/status/:status', (req, res) => {
                 // halt or error
-                const status = req.params(":status")
-                if (status.equals("down")) {
+                const status = req.params(':status')
+                if (status.equals('down')) {
                     this.server.stop()
                 } else {
                     res.status(401);
-                    res.body("{\"status\": \"400\", \"message\":\"Bad Request\"}")
+                    res.body('{\"status\": \"400\", \"message\":\"Bad Request\"}')
                 }
             })
 
@@ -107,11 +99,11 @@ export default class Rest {
 
             get('/registry', (req, res) => JSON.stringify(CoreUtils.buildResponse(Status.OK, this.registry.listAsJSON())))
 
-            agentsService(this.dataAPIs.AgentsAPI, this.config.salt)
-            new PeersService(this.dataAPIs.PeersAPI, this.config.salt).attachEndpoints()
-            domainsService(this.dataAPIs.DomainsAPI, this.config.salt)
-            gatewaysService(this.dataAPIs.GatewaysAPI, this.config.salt)
-            didsService(this.dataAPIs.DIDsAPI, this.config.salt)
+            resourcesService(this.dataAPIs.AgentsAPI, 'Agent')
+            resourcesService(this.dataAPIs.PeersAPI, 'Peer')
+            resourcesService(this.dataAPIs.DomainsAPI, 'Domain')
+            resourcesService(this.dataAPIs.GatewaysAPI, 'Gateway')
+            resourcesService(this.dataAPIs.DIDsAPI, 'DID')
         })
     }
 

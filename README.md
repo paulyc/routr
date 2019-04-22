@@ -1,81 +1,67 @@
-<!--<h1 align="center">
-  <br>
-  <a href="http://github.com/fonoster/routr"><img src="https://raw.githubusercontent.com/wiki/fonoster/routr/images/logo.png" alt="Running Routr" width="150"></a>
-  <br>
-  Routr
-  <br>
-</h1>-->
 
-<h2 align="left">Next-generation Sip Server.</h4>
+<img src="https://raw.githubusercontent.com/fonoster/routr/master/brand.png" alt="Routr Logo" height="100">
 
-<p align="left">
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg"
-         alt="License: MIT">
-  </a>
-</p>
+<br />
+
+[![Build Status](https://travis-ci.org/fonoster/routr.svg?branch=master)](https://travis-ci.org/fonoster/routr) [![Maintainability](https://api.codeclimate.com/v1/badges/49ea061777d76c003b71/maintainability)](https://codeclimate.com/github/fonoster/routr/maintainability)<!-- [![Test Coverage](https://api.codeclimate.com/v1/badges/beb25546dbb26fd600d2/test_coverage)](https://codeclimate.com/github/fonoster/routr/test_coverage)--> [![Join the chat Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fonoster/routr?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat on Slack](https://img.shields.io/badge/slack-join%20chat-pink.svg)](https://fonosterteam.typeform.com/to/Xy8Oc0)
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="license: MIT"></a>
 
 <p align="left">
-  <a href="#key-features">Key Features</a> •
+  <a href="#features">Features</a> •
   <a href="#quick-start">Quick Start</a> •
+  <a href="https://routr.io/docs/introduction/overview">Documentation</a> •
+  <a href="https://demo.routr.io/login">Demo</a> •
   <a href="#bugs-and-feedback">Bugs and Feedback</a> •
   <a href="#Contributing">Contributing</a> •
   <a href="#license">License</a>
 </p>
 
-## Key Features
+**Routr** – a lightweight sip proxy, location server, and registrar that provides a reliable and scalable SIP infrastructure for telephony carriers, communication service providers, and integrators. It also provides with capabilities that are suitable for the enterprise and personal needs. To get involved in the development of this project please contact us at @fonoster.
 
-- Proxy
-- Registrar Service
-- Location Service
-- Call Forking
-- Multi-Tenancy/Multi-Domain
-- Access to the PSTN Using SIP Gateways
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Next-generation%20SIP%20Server&url=https://github.com/fonoster/routr&via=fonoster&hashtags=voip,sip,webrtc,telephony)
+
+## Features
+
+Routr's main features are:
+
+- Typical SIP Server functions; Proxy, Registrar, Location Service
+- Multi-Tenant/Multi-Domain with Domain level Access Control List
 - Transport: TCP, UDP, TLS, WebSocket
-- Data Sources: Redis, Restful API, Files
-- Restful API
-- Command Line Tool for Admin Operations
-- Routing Capabilities
-  - Intra-Domain Routing (IDR)
-  - Domain Ingress Routing(DIR)
-  - Domain Egress Routing (DER)
-  - Peer Egress Routing (PER)
-- Security
-  - Digest SIP User Authentication
-  - Domain Access Control List (DACL)
-  - Restful service secured with TLS and JWT tokens
+- Currently supports Redis, HTTP Requests, and YAML files as the data source
+- Server management and monitoring with the RESTful API, CLI, and Web Console
+- Configurable routing strategies; Intra-Domain, Domain Ingress, Domain Egress and Peer Egress
 
-To learn more, read the [documentation](https://fonoster.github.io/routr). :books:
+To learn more, read the [documentation](https://routr.io/docs/introduction/overview/). :books:
 
 ## Quick Start
 
-**Download the server**
+There are no special requirements to install and run the server. Just follow this easy steps:
+
+&#10122; Download the server for your platform
 
 | Platform | Download |
 | -- | -- |
-| Linux | [tar.gz](https://github.com/fonoster/routr/releases/download/1.0.0-rc1/routr-1.0.0-rc1_linux-x64_bin.tar.gz) |  
-| macOS | [tar.gz](https://github.com/fonoster/routr/releases/download/1.0.0-rc1/routr-1.0.0-rc1_osx-x64_bin.tar.gz) |  
-| Windows | [tar.gz](https://github.com/fonoster/routr/releases/download/1.0.0-rc1/routr-1.0.0-rc1_windows-x64_bin.tar.gz), [zip](https://github.com/fonoster/routr/releases/download/1.0.0-rc1/routr-1.0.0-rc1_windows-x64_bin.zip) |  
-| Docker | [img](https://hub.docker.com/r/fonoster/routr/) |  
+| Linux | [tar.gz](https://github.com/fonoster/routr/releases/download/1.0.0-rc2/routr-1.0.0-rc2_linux-x64_bin.tar.gz) |  
+| macOS | [tar.gz](https://github.com/fonoster/routr/releases/download/1.0.0-rc2/routr-1.0.0-rc2_osx-x64_bin.tar.gz) |  
+| Windows | [tar.gz](https://github.com/fonoster/routr/releases/download/1.0.0-rc2/routr-1.0.0-rc2_windows-x64_bin.tar.gz), [zip](https://github.com/fonoster/routr/releases/download/1.0.0-rc2/routr-1.0.0-rc2_windows-x64_bin.zip) |  
 
-**Running with Docker**
+&#10123; Then extract it:
 
 ```bash
-docker pull fonoster/routr
-docker run -it \
-    -p 4567:4567 \
-    -p 5060:5060 \
-    -p 5060:5060/udp \
-    -p 5061-5063:5061-5063 \
-    -e ROUTR_EXTERN_ADDR=${your host address} \
-    fonoster/routr
+tar xvfz routr-*.tar.gz
+cd routr-*
 ```
-**Running with any other platform**
+
+&#10124; Run the server using the `routr` command
 
 ```bash
-cd routr.1.0.0-rc1
 ./routr
 ```
+
+Have 10 minutes? Try the interactive tutorial
+
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/fonoster/routr-walkthrough-tutorial&tutorial=tutorial.md)
 
 ## Bugs and Feedback
 
@@ -92,4 +78,4 @@ For contributing, please see the following links:
  - [Pedro Sanders](https://github.com/psanders)
 
 ## LICENSE
-Copyright (C) 2018 by [Fonoster Inc](https://github.com/fonoster). MIT License (see [LICENSE](https://github.com/fonoster/routr/blob/master/LICENSE) for details).
+Copyright (C) 2019 by [Fonoster Inc](https://fonoster.com). MIT License (see [LICENSE](https://github.com/fonoster/routr/blob/master/LICENSE) for details).
